@@ -1,0 +1,8 @@
+pool:
+  vmImage: 'Ubuntu 16.04'
+
+variables:
+  infraRegion: westus2
+
+steps:
+- script: echo 'Hello, world!'
