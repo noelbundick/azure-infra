@@ -4,10 +4,10 @@ IFS=$'\n\t'
 
 RG=''
 LOCATION=''
-UPN=''
+USER_OID=''
 
 show_usage() {
-  echo "Usage: deploy.sh --resource-group <rg> --location <location> --user-principal-name <upn>"
+  echo "Usage: deploy.sh --resource-group <rg> --location <location> --user-object-id <objectId>"
 }
 
 parse_arguments() {
@@ -26,8 +26,8 @@ parse_arguments() {
         LOCATION=$2
         shift 2
         ;;
-      -u|--user-principal-name)
-        UPN=$2
+      -u|--user-object-id)
+        USER_OID=$2
         shift 2
         ;;
       -n|--baseName)
@@ -51,16 +51,13 @@ parse_arguments() {
 }
 
 validate_arguments() {
-  if [[ -z $RG || -z $LOCATION || -z $UPN || -z $BASENAME ]]; then
+  if [[ -z $RG || -z $LOCATION || -z $USER_OID || -z $BASENAME ]]; then
     show_usage
     exit 1
   fi
 }
 
 deploy() {
-  # convert UPN to objectId
-  USER_OID=$(az ad user show --upn-or-object-id $UPN --query objectId -o tsv)
-
   az group create -n $RG -l $LOCATION
   az group deployment create -g $RG --template-file ./azuredeploy.json --parameters baseName=$BASENAME userObjectId=$USER_OID
 }
