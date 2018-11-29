@@ -2,7 +2,17 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  infraRegion: westus2
+  azureSubscription: 'TE Account - NoBun (6c1f4f3b-f65f-4667-8f9e-b9c48e09cd6b)'
+  resourceGroup: infra
+  location: westus2
+  userPrincipalName: nobun@microsoft.com
+  baseName: nobun
 
 steps:
-- script: echo 'Hello, world!'
+- task: AzureCLI@1
+  displayName: Create infra resources
+  inputs:
+    azureSubscription: $(azureSubscription)
+    scriptLocation: scriptPath
+    scriptPath: deploy.sh
+    arguments: '-g $(resourceGroup) -l $(location) -n $(baseName) -u $(userPrincipalName)'
