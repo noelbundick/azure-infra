@@ -13,6 +13,7 @@
     "variables": {
         "acrName": "[parameters('baseName')]",
         "functionappName": "[concat(parameters('baseName'), '-utility')]",
+        "identityName": "[concat(parameters('baseName'), '-utility')]",
         "insightsName": "[concat(parameters('baseName'), '-utility')]",
         "kvName": "[parameters('baseName')]",
         "storageName": "[toLower(parameters('baseName'))]"
@@ -102,14 +103,21 @@
             }
         },
         {
-            "name": "[variables('functionappName')]",
-            "apiVersion": "2016-08-01",
-            "location": "[resourceGroup().location]",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "name": "[variables('identityName')]",
+            "apiVersion": "2015-08-31-preview",
+            "location": "[resourceGroup().location]"
+        },
+        {
             "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('functionappName')]",
+            "location": "[resourceGroup().location]",
             "kind": "functionapp",
             "dependsOn": [
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
-                "[resourceId('Microsoft.Insights/components', variables('insightsName'))]"
+                "[resourceId('Microsoft.Insights/components', variables('insightsName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
             ],
             "properties": {
                 "name": "[variables('functionAppName')]",
@@ -142,6 +150,12 @@
                             "value": "[reference(resourceId('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]"
                         }
                     ]
+                }
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
                 }
             }
         }
