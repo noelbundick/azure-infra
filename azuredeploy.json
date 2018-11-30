@@ -71,12 +71,12 @@
             "type": "Microsoft.Insights/components",
             "location": "West US 2",
             "tags": {
-              "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('functionappName'))]": "Resource"
+                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('functionappName'))]": "Resource"
             },
             "properties": {
-              "ApplicationId": "[variables('functionappName')]"
+                "ApplicationId": "[variables('functionappName')]"
             }
-          },
+        },
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2018-07-01",
@@ -108,44 +108,43 @@
             "type": "Microsoft.Web/sites",
             "kind": "functionapp",
             "dependsOn": [
-              "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
-              "[resourceId('Microsoft.Insights/components', variables('insightsName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+                "[resourceId('Microsoft.Insights/components', variables('insightsName'))]"
             ],
             "properties": {
-              "name": "[variables('functionAppName')]",
-              "reserved": false,
-              "clientAffinityEnabled": false,
-              "siteConfig": {
-                "appSettings": [
-                  {
-                    "name": "FUNCTIONS_WORKER_RUNTIME",
-                    "value": "dotnet"
-                  },
-                  {
-                    "name": "AzureWebJobsStorage",
-                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2018-02-01').keys[0].value)]"
-                  },
-                  {
-                    "name": "FUNCTIONS_EXTENSION_VERSION",
-                    "value": "~2"
-                  },
-                  {
-                    "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                    "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2018-02-01').keys[0].value)]"
-                  },
-                  {
-                    "name": "WEBSITE_CONTENTSHARE",
-                    "value": "[toLower(variables('functionAppName'))]"
-                  },
-                  {
-                    "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                    "value": "[reference(resourceId('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]"
-                  }
-                ]
-              }
+                "name": "[variables('functionAppName')]",
+                "reserved": false,
+                "clientAffinityEnabled": false,
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "dotnet"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2018-02-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2018-02-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(variables('functionAppName'))]"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]"
+                        }
+                    ]
+                }
             }
-          }
+        }
     ],
-    "outputs": {
-    }
+    "outputs": {}
 }
