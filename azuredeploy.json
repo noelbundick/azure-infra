@@ -160,5 +160,10 @@
             }
         }
     ],
-    "outputs": {}
+    "outputs": {
+        "utilityIdentityId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+        }
+    }
 }

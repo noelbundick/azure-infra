@@ -1,0 +1,26 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "utilityIdentityId": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "utilityRoleAssignmentId": "[guid(concat(subscription().id, 'contributor'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2015-07-01",
+            "name": "[variables('utilityRoleAssignmentId')]",
+            "properties": {
+                "roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+                "principalId": "[reference(parameters('utilityIdentityId'), '2015-08-31-preview').principalId]",
+                "scope": "[subscription().id]"
+            }
+        }
+    ],
+    "outputs": {}
+}
