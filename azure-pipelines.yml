@@ -28,4 +28,4 @@ steps:
       dotnet publish -c Release
       cd bin/Release/netcoreapp2.1/publish
       zip -r Acanthamoeba.Functions.zip *
-      az functionapp deployment source config-zip --src Acanthamoeba.Functions.zip -n $(baseName) -g $(resourceGroup)
+      az functionapp deployment source config-zip --src Acanthamoeba.Functions.zip -n $(functionappName) -g $(resourceGroup)

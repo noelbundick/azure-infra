@@ -61,6 +61,10 @@ deploy() {
   az group create -n $RG -l $LOCATION
   RG_DEPLOYMENT=$(az group deployment create -g $RG --template-file ./azuredeploy.json --parameters baseName=$BASENAME userObjectId=$USER_OID -o json)
 
+  # Set an Azure DevOps variable (functionappName) for later steps
+  FUNCTIONAPP_NAME=$(echo $RG_DEPLOYMENT | jq -r .properties.outputs.functionappName.value)
+  echo "##vso[task.setvariable variable=functionappName]$FUNCTIONAPP_NAME"
+
   # Subscription-level deployment runs last because we need the Managed Identity to exist
   UTILITY_IDENTITY=$(echo $RG_DEPLOYMENT | jq -r .properties.outputs.utilityIdentityId.value)
   az deployment create -l $LOCATION --template-file ./azuredeploy.subscription.json --parameters utilityIdentityId=$UTILITY_IDENTITY
