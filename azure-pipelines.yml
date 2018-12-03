@@ -9,10 +9,23 @@ variables:
   baseName: nobun
 
 steps:
-- task: AzureCLI@1
-  displayName: Create infra resources
+- displayName: Create infra resources
+  task: AzureCLI@1
   inputs:
     azureSubscription: $(azureSubscription)
     scriptLocation: scriptPath
     scriptPath: deploy.sh
     arguments: '-g $(resourceGroup) -l $(location) -n $(baseName) -u $(userObjectId)'
+
+- displayName: Deploy utility functions
+  task: AzureCLI@1
+  inputs:
+    azureSubscription: $(azureSubscription)
+    scriptLocation: inlineScript
+    inlineScript: |
+      git clone https://github.com/noelbundick/azure-utilities
+      cd azure-utilities/src/Acanthamoeba.Functions
+      dotnet publish -c Release
+      cd bin/Release/netcoreapp2.1/publish
+      zip -r Acanthamoeba.Functions.zip *
+      az functionapp deployment source config-zip --src Acanthamoeba.Functions.zip -n $(baseName) -g $(resourceGroup)
