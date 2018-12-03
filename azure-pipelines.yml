@@ -9,16 +9,16 @@ variables:
   baseName: nobun
 
 steps:
-- displayName: Create infra resources
-  task: AzureCLI@1
+- task: AzureCLI@1
+  displayName: Create infra resources
   inputs:
     azureSubscription: $(azureSubscription)
     scriptLocation: scriptPath
     scriptPath: deploy.sh
     arguments: '-g $(resourceGroup) -l $(location) -n $(baseName) -u $(userObjectId)'
 
-- displayName: Deploy utility functions
-  task: AzureCLI@1
+- task: AzureCLI@1
+  displayName: Deploy utility functions
   inputs:
     azureSubscription: $(azureSubscription)
     scriptLocation: inlineScript
