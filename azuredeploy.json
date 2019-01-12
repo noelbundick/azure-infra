@@ -148,6 +148,10 @@
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
                             "value": "[reference(resourceId('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "AzureServicesAuthConnectionString",
+                            "value": "[concat('RunAs=App;AppId=', reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2015-08-31-preview').clientId, ';')]"
                         }
                     ]
                 }
